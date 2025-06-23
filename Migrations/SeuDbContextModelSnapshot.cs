@@ -4,6 +4,7 @@ using BackEndDemoday.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,38 +16,44 @@ namespace BackEndDemoday.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("BackEndDemoday.Entities.AssinaturaPlano", b =>
                 {
                     b.Property<int>("IdAssinaturaPlano")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idAssinaturaPlano");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdAssinaturaPlano"));
 
                     b.Property<DateOnly>("DataAssinatura")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("date")
                         .HasColumnName("dataAssinatura")
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<DateOnly?>("DataExpiracao")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("date")
                         .HasColumnName("dataExpiracao");
 
                     b.Property<int>("IdPlano")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idPlano");
 
                     b.Property<int>("IdUsuario")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idUsuario");
 
                     b.Property<string>("StatusAssinatura")
                         .IsRequired()
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("statusAssinatura");
 
                     b.HasKey("IdAssinaturaPlano")
@@ -63,19 +70,21 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdAvaliacao")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idAvaliacao");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdAvaliacao"));
 
                     b.Property<DateOnly?>("DataAvaliacao")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("date")
                         .HasColumnName("dataAvaliacao")
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("DescricaoAvaliacao")
                         .HasMaxLength(500)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("descricaoAvaliacao");
 
                     b.Property<decimal>("EstrelasAvaliacao")
@@ -92,27 +101,29 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdContratacaoServico")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idContratacaoServico");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdContratacaoServico"));
 
                     b.Property<DateOnly>("DataContratacao")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("date")
                         .HasColumnName("dataContratacao")
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<int>("IdPerfilContratado")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idPerfilContratado");
 
                     b.Property<int>("IdUsuarioContratante")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idUsuarioContratante");
 
                     b.Property<string>("StatusContratacao")
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("statusContratacao");
 
                     b.Property<decimal?>("ValorCombinado")
@@ -133,18 +144,20 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdCupom")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idCupom");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdCupom"));
 
                     b.Property<string>("CodigoCupom")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("codigoCupom");
 
                     b.Property<DateOnly?>("DataValidadeCupom")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("date")
                         .HasColumnName("dataValidadeCupom");
 
                     b.Property<decimal?>("PorcentagemDescontoCupom")
@@ -155,13 +168,13 @@ namespace BackEndDemoday.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("statusCupom");
 
                     b.Property<string>("TipoCupom")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("tipoCupom");
 
                     b.HasKey("IdCupom")
@@ -177,8 +190,10 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdPagamento")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idPagamento");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPagamento"));
 
                     b.Property<DateTime?>("DataPagamento")
                         .ValueGeneratedOnAdd()
@@ -189,32 +204,32 @@ namespace BackEndDemoday.Migrations
                     b.Property<string>("FormaPagamento")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("formaPagamento");
 
                     b.Property<int?>("IdAssinaturaPlano")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idAssinaturaPlano");
 
                     b.Property<int?>("IdContratacaoServico")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idContratacaoServico");
 
                     b.Property<int?>("IdCupom")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idCupom");
 
                     b.Property<string>("IdTransacao")
                         .HasMaxLength(255)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("idTransacao");
 
                     b.Property<string>("StatusPagamento")
                         .IsRequired()
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("statusPagamento");
 
                     b.Property<decimal>("ValorBruto")
@@ -245,47 +260,49 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdPerfil")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idPerfil");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPerfil"));
 
                     b.Property<string>("CategoriaPerfil")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("categoriaPerfil");
 
                     b.Property<string>("DescricaoPerfil")
                         .HasMaxLength(500)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("descricaoPerfil");
 
                     b.Property<string>("FotoPerfilUrl")
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("fotoPerfilUrl");
 
                     b.Property<int>("IdUsuario")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idUsuario");
 
                     b.Property<string>("NomePerfil")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("nomePerfil");
 
                     b.Property<string>("RedeSocialPerfil")
                         .HasMaxLength(255)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("redeSocialPerfil");
 
                     b.Property<string>("TipoLocalUsuario")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("tipoLocalUsuario");
 
                     b.HasKey("IdPerfil")
@@ -300,21 +317,23 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdPlano")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idPlano");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdPlano"));
 
                     b.Property<string>("StatusPlano")
                         .IsRequired()
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("statusPlano");
 
                     b.Property<string>("TipoPlano")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("tipoPlano");
 
                     b.Property<decimal>("ValorPlano")
@@ -331,24 +350,26 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdServicoOferecido")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idServicoOferecido");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdServicoOferecido"));
 
                     b.Property<string>("DescricaoServico")
                         .HasMaxLength(500)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("descricaoServico");
 
                     b.Property<int>("IdPerfil")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idPerfil");
 
                     b.Property<string>("NomeServico")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("nomeServico");
 
                     b.Property<decimal?>("PrecoBase")
@@ -367,77 +388,79 @@ namespace BackEndDemoday.Migrations
                 {
                     b.Property<int>("IdUsuario")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idUsuario");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdUsuario"));
 
                     b.Property<string>("CepUsuario")
                         .HasMaxLength(9)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character(9)")
                         .HasColumnName("cepUsuario")
                         .IsFixedLength();
 
                     b.Property<string>("CidadeUsuario")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("cidadeUsuario");
 
                     b.Property<DateOnly?>("DataCadastroUsuario")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("date")
                         .HasColumnName("dataCadastroUsuario")
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<DateOnly?>("DataNascimentoUsuario")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("date")
                         .HasColumnName("dataNascimentoUsuario");
 
                     b.Property<string>("EmailUsuario")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("emailUsuario");
 
                     b.Property<string>("EnderecoUsuario")
                         .HasMaxLength(255)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("enderecoUsuario");
 
                     b.Property<string>("NomeUsuario")
                         .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("nomeUsuario");
 
                     b.Property<string>("SenhaUsuario")
                         .IsRequired()
                         .HasMaxLength(255)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("senhaUsuario");
 
                     b.Property<string>("SexoUsuario")
                         .HasMaxLength(1)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character(1)")
                         .HasColumnName("sexoUsuario")
                         .IsFixedLength();
 
                     b.Property<string>("TelefoneUsuario")
                         .HasMaxLength(20)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("telefoneUsuario");
 
                     b.Property<string>("TipoUsuario")
                         .IsRequired()
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("tipoUsuario");
 
                     b.HasKey("IdUsuario")
@@ -452,15 +475,15 @@ namespace BackEndDemoday.Migrations
             modelBuilder.Entity("BackEndDemoday.Entities.UsuarioAvaliaPerfil", b =>
                 {
                     b.Property<int>("IdUsuarioAvaliador")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idUsuarioAvaliador");
 
                     b.Property<int>("IdPerfilAvaliado")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idPerfilAvaliado");
 
                     b.Property<int>("IdAvaliacao")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("idAvaliacao");
 
                     b.HasKey("IdUsuarioAvaliador", "IdPerfilAvaliado")
