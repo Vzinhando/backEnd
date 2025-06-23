@@ -21,10 +21,5 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
   </ItemGroup>
-	<ItemGroup>
-  <Content Include="vizinhando.db">
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </Content>
-</ItemGroup>
 
 </Project>
