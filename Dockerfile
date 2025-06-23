@@ -1,26 +1,24 @@
-# Estágio 1: Build da Aplicação
+# Estágio 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copia os arquivos de projeto e restaura as dependências
 COPY *.sln .
-COPY backEnd/*.csproj ./backEnd/  # <-- MUDANÇA 1
+COPY BackEndDemoday/*.csproj ./BackEndDemoday/
 RUN dotnet restore
 
-# Copia todo o resto do código fonte da sua aplicação.
+# Copia todo o resto do código e publica a aplicação
 COPY . .
-
-# Publica a aplicação em modo Release
-WORKDIR /app/backEnd # <-- MUDANÇA 2
+WORKDIR /app/BackEndDemoday
 RUN dotnet publish -c Release -o /app/out
 
 
-# Estágio 2: Imagem Final
+# Estágio 2: Final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
 # Copia a aplicação publicada do estágio de build
 COPY --from=build /app/out .
 
-# Define o comando para iniciar a aplicação
-ENTRYPOINT ["dotnet", "backEnd.dll"] # <-- MUDANÇA 3
+# Comando para iniciar a aplicação
+ENTRYPOINT ["dotnet", "BackEndDemoday.dll"]
