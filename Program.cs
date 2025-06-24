@@ -1,7 +1,5 @@
-// Adicionando os 'usings' que faltavam para Repositories e Services
 using BackEndDemoday.Data;
 using BackEndDemoday.Services;
-// Usings para Autenticação e EF Core
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,27 +7,34 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. Configuração do Banco de Dados para Railway ---
-// O Railway nos dá a URL do banco em uma variável de ambiente.
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+// --- CONFIGURAÇÃO DO BANCO DE DADOS ---
+// Pega a string de conexão do appsettings.json para desenvolvimento local.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Se a variável não existir (rodando localmente), pegamos do appsettings.json
-if (string.IsNullOrEmpty(connectionString))
+// O Railway injeta a connection string na variável de ambiente DATABASE_URL.
+// Verificamos se essa variável existe para usar em produção.
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrEmpty(databaseUrl))
 {
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    // Converte a URL do Railway para o formato de connection string do Npgsql.
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    var user = userInfo[0];
+    var password = userInfo[1];
+    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={user};Password={password};";
 }
 
-// Trocamos UseSqlite por UseNpgsql para usar PostgreSQL
+// Adiciona o DbContext usando o provedor Npgsql (PostgreSQL).
 builder.Services.AddDbContext<SeuDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// --- 2. Injeção de Dependência (Correto!) ---
+
+// --- RESTANTE DAS CONFIGURAÇÕES ---
 builder.Services.AddControllers();
+
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
-
-// --- 3. Configuração de Autenticação JWT (Correto!) ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,7 +48,6 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        // Lembre-se de configurar estas variáveis no Railway
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
@@ -52,24 +56,21 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 
-// --- 4. Configuração do Swagger ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-// --- 5. Configuração da Porta para o Railway ---
-// O Railway informa a porta na variável de ambiente 'PORT'
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://*:{port}");
-
-builder.WebHost.UseUrls("http://*:" + Environment.GetEnvironmentVariable("PORT"));
-
-
-// --- Construção da Aplicação ---
 var app = builder.Build();
 
+// Aplica as migrations do Entity Framework automaticamente na inicialização.
+// Isso é útil para ambientes como o Railway.
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SeuDbContext>();
+    // Use o método `Database.Migrate()` para aplicar as migrations.
+    dbContext.Database.Migrate();
+}
 
-// --- Pipeline de Middlewares ---
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -78,7 +79,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// A ordem aqui é crucial e está correta:
 app.UseAuthentication();
 app.UseAuthorization();
 
