@@ -105,7 +105,7 @@ if (app.Environment.IsDevelopment())
     // Outras configurações de desenvolvimento podem ficar aqui.
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 // Usa a política de CORS definida
 app.UseCors("AllowAll");
