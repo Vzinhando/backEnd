@@ -3,15 +3,21 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia os arquivos de solução (.sln) e de projeto (.csproj) primeiro.
-# Isso é uma otimização de cache. Assumimos que eles estão na raiz.
+# Copia o arquivo de solução (.sln) da raiz.
 COPY *.sln .
-COPY *.csproj .
-RUN dotnet restore
 
-# Copia o resto dos arquivos do código-fonte.
-COPY . .
-RUN dotnet publish -c Release -o /app/publish --no-restore
+# Copia o arquivo de projeto (.csproj) que está dentro da subpasta.
+COPY BackEndDemoday/*.csproj ./BackEndDemoday/
+
+# Restaura as dependências. É importante especificar o caminho do projeto.
+RUN dotnet restore "./BackEndDemoday/BackEndDemoday.csproj"
+
+# Copia todo o resto do código-fonte para a sua respectiva pasta.
+COPY BackEndDemoday/. ./BackEndDemoday/
+
+# Define o diretório de trabalho para a pasta do projeto antes de publicar.
+WORKDIR "/src/BackEndDemoday"
+RUN dotnet publish "BackEndDemoday.csproj" -c Release -o /app/publish
 
 # --- Estágio Final ---
 # Usa a imagem menor do ASP.NET Runtime, que é suficiente para rodar a aplicação.
@@ -25,5 +31,5 @@ COPY --from=build /app/publish .
 EXPOSE 8080
 
 # Define o comando para iniciar a aplicação.
-# Substitua 'BackEndDemoday.dll' pelo nome do seu arquivo .dll principal se for diferente.
+# O nome do .dll deve estar correto.
 ENTRYPOINT ["dotnet", "BackEndDemoday.dll"]
