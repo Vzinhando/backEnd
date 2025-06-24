@@ -7,6 +7,18 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Adiciona a política de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 // --- CONFIGURAÇÃO DO BANCO DE DADOS (VERSÃO FINAL) ---
 string connectionString;
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
@@ -84,14 +96,19 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Habilita o Swagger e a sua UI em todos os ambientes
+app.UseSwagger();
+app.UseSwaggerUI();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Outras configurações de desenvolvimento podem ficar aqui.
 }
 
 app.UseHttpsRedirection();
+
+// Usa a política de CORS definida
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -99,4 +116,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
