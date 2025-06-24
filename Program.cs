@@ -7,21 +7,25 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- CONFIGURAÇÃO DO BANCO DE DADOS ---
-// Pega a string de conexão do appsettings.json para desenvolvimento local.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// O Railway injeta a connection string na variável de ambiente DATABASE_URL.
-// Verificamos se essa variável existe para usar em produção.
+// --- CONFIGURAÇÃO DO BANCO DE DADOS (VERSÃO FINAL) ---
+string connectionString;
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
 if (!string.IsNullOrEmpty(databaseUrl))
 {
-    // Converte a URL do Railway para o formato de connection string do Npgsql.
+    // Lógica para converter a DATABASE_URL do Railway para a connection string do Npgsql.
     var uri = new Uri(databaseUrl);
     var userInfo = uri.UserInfo.Split(':');
     var user = userInfo[0];
     var password = userInfo[1];
-    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={user};Password={password};";
+
+    // Adiciona SslMode=Require e Trust Server Certificate=true, que é crucial para conexões em nuvem como o Railway.
+    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={user};Password={password};SslMode=Require;Trust Server Certificate=true;";
+}
+else
+{
+    // Usa a connection string local do appsettings.json se a DATABASE_URL não estiver presente.
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 }
 
 // Adiciona o DbContext usando o provedor Npgsql (PostgreSQL).
@@ -65,9 +69,19 @@ var app = builder.Build();
 // Isso é útil para ambientes como o Railway.
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<SeuDbContext>();
-    // Use o método `Database.Migrate()` para aplicar as migrations.
-    dbContext.Database.Migrate();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<SeuDbContext>();
+        // Use o método `Database.Migrate()` para aplicar as migrations.
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        // Adiciona um log em caso de erro na migração para facilitar a depuração.
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro ao aplicar as migrations.");
+    }
 }
 
 
@@ -85,3 +99,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
