@@ -38,7 +38,8 @@ public partial class SeuDbContext : DbContext
         {
             entity.HasKey(e => e.IdAssinaturaPlano).HasName("PK__Assinatu__0D8DAB1EC7C70527");
 
-            entity.Property(e => e.DataAssinatura).HasDefaultValueSql("(getdate())");
+            // ALTERADO DE getdate() PARA NOW()
+            entity.Property(e => e.DataAssinatura).HasDefaultValueSql("NOW()");
 
             entity.HasOne(d => d.IdPlanoNavigation).WithMany(p => p.AssinaturaPlanos)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -53,14 +54,16 @@ public partial class SeuDbContext : DbContext
         {
             entity.HasKey(e => e.IdAvaliacao).HasName("PK__Avaliaca__2A0C83123A7CE11B");
 
-            entity.Property(e => e.DataAvaliacao).HasDefaultValueSql("(getdate())");
+            // ALTERADO DE getdate() PARA NOW()
+            entity.Property(e => e.DataAvaliacao).HasDefaultValueSql("NOW()");
         });
 
         modelBuilder.Entity<ContratacaoServico>(entity =>
         {
             entity.HasKey(e => e.IdContratacaoServico).HasName("PK__Contrata__8D88D7932FE978B5");
 
-            entity.Property(e => e.DataContratacao).HasDefaultValueSql("(getdate())");
+            // ALTERADO DE getdate() PARA NOW()
+            entity.Property(e => e.DataContratacao).HasDefaultValueSql("NOW()");
 
             entity.HasOne(d => d.IdPerfilContratadoNavigation).WithMany(p => p.ContratacaoServicos)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -80,7 +83,7 @@ public partial class SeuDbContext : DbContext
         {
             entity.HasKey(e => e.IdPagamento).HasName("PK__Pagament__866960F6C4BF8598");
 
-            entity.Property(e => e.DataPagamento).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.DataPagamento).HasDefaultValueSql("NOW()");
 
             entity.HasOne(d => d.IdAssinaturaPlanoNavigation).WithMany(p => p.Pagamentos).HasConstraintName("FK_Pagamento_AssinaturaPlano");
 
@@ -113,7 +116,10 @@ public partial class SeuDbContext : DbContext
             entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__645723A6A1C27A4F");
 
             entity.Property(e => e.CepUsuario).IsFixedLength();
-            entity.Property(e => e.DataCadastroUsuario).HasDefaultValueSql("(getdate())");
+
+            // ALTERADO DE getdate() PARA NOW()
+            entity.Property(e => e.DataCadastroUsuario).HasDefaultValueSql("NOW()");
+
             entity.Property(e => e.SexoUsuario).IsFixedLength();
         });
 
@@ -134,6 +140,7 @@ public partial class SeuDbContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
