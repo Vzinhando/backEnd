@@ -1,5 +1,4 @@
-// Importações necessárias
-using Microsoft.AspNetCore.HttpOverrides; // <<< ADICIONE ESTA IMPORTAÇÃO
+using Microsoft.AspNetCore.HttpOverrides;
 using BackEndDemoday.Data;
 using BackEndDemoday.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,8 +8,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- MELHORIA: Políticas de CORS específicas para cada ambiente ---
-// (código mantido, está correto)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevelopmentPolicy",
@@ -34,7 +31,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-// --- CONFIGURAÇÃO DO BANCO DE DADOS (Lógica mantida, está correta) ---
 string connectionString;
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
@@ -54,12 +50,9 @@ else
 builder.Services.AddDbContext<SeuDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// (Resto do código mantido, está correto)
-// --- INJEÇÃO DE DEPENDÊNCIA ---
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
-// --- CONFIGURAÇÃO DE AUTENTICAÇÃO JWT ---
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(jwtKey))
 {
@@ -86,28 +79,24 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddAuthorization();
 
-// --- SWAGGER E OUTROS SERVIÇOS ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// <<< NOVA CONFIGURAÇÃO ADICIONADA AQUI >>>
-// Configura os Forwarded Headers para funcionar atrás do proxy da Railway
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-// --- APLICAÇÃO AUTOMÁTICA DE MIGRATIONS ---
 await ApplyMigrationsAsync(app.Services);
 
-// --- CONFIGURAÇÃO DO PIPELINE HTTP ---
+    app.UseSwagger(); // movi para fora para poder abrir o swagger
+    app.UseSwaggerUI();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseCors("DevelopmentPolicy");
 }
 else
@@ -124,7 +113,6 @@ app.MapControllers();
 
 app.Run();
 
-// --- FUNÇÃO AUXILIAR PARA MIGRATIONS (mantida, está correta) ---
 static async Task ApplyMigrationsAsync(IServiceProvider services)
 {
     using (var scope = services.CreateScope())
