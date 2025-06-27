@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackEndDemoday.Migrations
 {
     [DbContext(typeof(SeuDbContext))]
-    [Migration("20250623215303_InitialPostgresMigration")]
-    partial class InitialPostgresMigration
+    [Migration("20250627141155_FinalCorrectedMigration")]
+    partial class FinalCorrectedMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace BackEndDemoday.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("date")
                         .HasColumnName("dataAssinatura")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<DateOnly?>("DataExpiracao")
                         .HasColumnType("date")
@@ -82,7 +82,7 @@ namespace BackEndDemoday.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("date")
                         .HasColumnName("dataAvaliacao")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("DescricaoAvaliacao")
                         .HasMaxLength(500)
@@ -113,7 +113,7 @@ namespace BackEndDemoday.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("date")
                         .HasColumnName("dataContratacao")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<int>("IdPerfilContratado")
                         .HasColumnType("integer")
@@ -202,7 +202,7 @@ namespace BackEndDemoday.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("dataPagamento")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("FormaPagamento")
                         .HasMaxLength(50)
@@ -413,7 +413,7 @@ namespace BackEndDemoday.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("date")
                         .HasColumnName("dataCadastroUsuario")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<DateOnly?>("DataNascimentoUsuario")
                         .HasColumnType("date")

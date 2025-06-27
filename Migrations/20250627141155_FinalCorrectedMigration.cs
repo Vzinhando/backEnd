@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackEndDemoday.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialPostgresMigration : Migration
+    public partial class FinalCorrectedMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace BackEndDemoday.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     descricaoAvaliacao = table.Column<string>(type: "character varying(500)", unicode: false, maxLength: 500, nullable: true),
                     estrelasAvaliacao = table.Column<decimal>(type: "numeric(3,1)", nullable: false),
-                    dataAvaliacao = table.Column<DateOnly>(type: "date", nullable: true, defaultValueSql: "(getdate())")
+                    dataAvaliacao = table.Column<DateOnly>(type: "date", nullable: true, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -69,7 +69,7 @@ namespace BackEndDemoday.Migrations
                     emailUsuario = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: false),
                     senhaUsuario = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: false),
                     tipoUsuario = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false),
-                    dataCadastroUsuario = table.Column<DateOnly>(type: "date", nullable: true, defaultValueSql: "(getdate())"),
+                    dataCadastroUsuario = table.Column<DateOnly>(type: "date", nullable: true, defaultValueSql: "NOW()"),
                     dataNascimentoUsuario = table.Column<DateOnly>(type: "date", nullable: true),
                     sexoUsuario = table.Column<string>(type: "character(1)", unicode: false, fixedLength: true, maxLength: 1, nullable: true),
                     cepUsuario = table.Column<string>(type: "character(9)", unicode: false, fixedLength: true, maxLength: 9, nullable: true),
@@ -90,7 +90,7 @@ namespace BackEndDemoday.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     idUsuario = table.Column<int>(type: "integer", nullable: false),
                     idPlano = table.Column<int>(type: "integer", nullable: false),
-                    dataAssinatura = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "(getdate())"),
+                    dataAssinatura = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "NOW()"),
                     dataExpiracao = table.Column<DateOnly>(type: "date", nullable: true),
                     statusAssinatura = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false)
                 },
@@ -142,7 +142,7 @@ namespace BackEndDemoday.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     idUsuarioContratante = table.Column<int>(type: "integer", nullable: false),
                     idPerfilContratado = table.Column<int>(type: "integer", nullable: false),
-                    dataContratacao = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "(getdate())"),
+                    dataContratacao = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "NOW()"),
                     valorCombinado = table.Column<decimal>(type: "numeric(10,2)", nullable: true),
                     statusContratacao = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: true)
                 },
@@ -227,7 +227,7 @@ namespace BackEndDemoday.Migrations
                     formaPagamento = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true),
                     idTransacao = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: true),
                     statusPagamento = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false),
-                    dataPagamento = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())")
+                    dataPagamento = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
