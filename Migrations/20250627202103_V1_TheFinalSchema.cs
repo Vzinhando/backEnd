@@ -1,4 +1,5 @@
-﻿using System;
+﻿// COPIE E COLE TUDO A PARTIR DAQUI
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,348 +14,348 @@ namespace BackEndDemoday.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Avaliacao",
+                name: "avaliacoes",
                 columns: table => new
                 {
-                    idAvaliacao = table.Column<int>(type: "integer", nullable: false)
+                    id_avaliacao = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    descricaoAvaliacao = table.Column<string>(type: "character varying(500)", unicode: false, maxLength: 500, nullable: true),
-                    estrelasAvaliacao = table.Column<decimal>(type: "numeric(3,1)", nullable: false),
-                    dataAvaliacao = table.Column<DateOnly>(type: "date", nullable: true, defaultValueSql: "NOW()")
+                    descricao_avaliacao = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    estrelas_avaliacao = table.Column<decimal>(type: "numeric(3,1)", nullable: false),
+                    data_avaliacao = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_avaliacao", x => x.idAvaliacao);
+                    table.PrimaryKey("pk_avaliacoes", x => x.id_avaliacao);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CupomDesconto",
+                name: "cupom_descontos",
                 columns: table => new
                 {
-                    idCupom = table.Column<int>(type: "integer", nullable: false)
+                    id_cupom = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    codigoCupom = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
-                    tipoCupom = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true),
-                    porcentagemDescontoCupom = table.Column<decimal>(type: "numeric(5,2)", nullable: true),
-                    statusCupom = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false),
-                    dataValidadeCupom = table.Column<DateOnly>(type: "date", nullable: true)
+                    codigo_cupom = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    tipo_cupom = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    porcentagem_desconto_cupom = table.Column<decimal>(type: "numeric(5,2)", nullable: true),
+                    status_cupom = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    data_validade_cupom = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_cupom_desconto", x => x.idCupom);
+                    table.PrimaryKey("pk_cupom_descontos", x => x.id_cupom);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Plano",
+                name: "planos",
                 columns: table => new
                 {
-                    idPlano = table.Column<int>(type: "integer", nullable: false)
+                    id_plano = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    tipoPlano = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
-                    valorPlano = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    statusPlano = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false)
+                    tipo_plano = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    valor_plano = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    status_plano = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_plano", x => x.idPlano);
+                    table.PrimaryKey("pk_planos", x => x.id_plano);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Usuario",
+                name: "usuarios",
                 columns: table => new
                 {
-                    idUsuario = table.Column<int>(type: "integer", nullable: false)
+                    id_usuario = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    nomeUsuario = table.Column<string>(type: "character varying(150)", unicode: false, maxLength: 150, nullable: false),
-                    emailUsuario = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: false),
-                    senhaUsuario = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: false),
-                    tipoUsuario = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false),
-                    dataCadastroUsuario = table.Column<DateOnly>(type: "date", nullable: true, defaultValueSql: "NOW()"),
-                    dataNascimentoUsuario = table.Column<DateOnly>(type: "date", nullable: true),
-                    sexoUsuario = table.Column<string>(type: "character varying(1)", unicode: false, maxLength: 1, nullable: true),
-                    cepUsuario = table.Column<string>(type: "character varying(9)", unicode: false, maxLength: 9, nullable: true),
-                    enderecoUsuario = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: true),
-                    cidadeUsuario = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: true),
-                    telefoneUsuario = table.Column<string>(type: "character varying(20)", unicode: false, maxLength: 20, nullable: true)
+                    nome_usuario = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    email_usuario = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    senha_usuario = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    tipo_usuario = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    data_cadastro_usuario = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "NOW()"),
+                    data_nascimento_usuario = table.Column<DateOnly>(type: "date", nullable: true),
+                    sexo_usuario = table.Column<string>(type: "character varying(1)", maxLength: 1, nullable: true),
+                    cep_usuario = table.Column<string>(type: "character varying(9)", maxLength: 9, nullable: true),
+                    endereco_usuario = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    cidade_usuario = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    telefone_usuario = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_usuario", x => x.idUsuario);
+                    table.PrimaryKey("pk_usuarios", x => x.id_usuario);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssinaturaPlano",
+                name: "assinatura_planos",
                 columns: table => new
                 {
-                    idAssinaturaPlano = table.Column<int>(type: "integer", nullable: false)
+                    id_assinatura_plano = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    idUsuario = table.Column<int>(type: "integer", nullable: false),
-                    idPlano = table.Column<int>(type: "integer", nullable: false),
-                    dataAssinatura = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "NOW()"),
-                    dataExpiracao = table.Column<DateOnly>(type: "date", nullable: true),
-                    statusAssinatura = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false)
+                    id_usuario = table.Column<int>(type: "integer", nullable: false),
+                    id_plano = table.Column<int>(type: "integer", nullable: false),
+                    data_assinatura = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    data_expiracao = table.Column<DateOnly>(type: "date", nullable: true),
+                    status_assinatura = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_assinatura_plano", x => x.idAssinaturaPlano);
+                    table.PrimaryKey("pk_assinatura_planos", x => x.id_assinatura_plano);
                     table.ForeignKey(
-                        name: "fk_assinatura_plano_plano_id_plano",
-                        column: x => x.idPlano,
-                        principalTable: "Plano",
-                        principalColumn: "idPlano",
+                        name: "fk_assinatura_planos_planos_id_plano",
+                        column: x => x.id_plano,
+                        principalTable: "planos",
+                        principalColumn: "id_plano",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_assinatura_plano_usuario_id_usuario",
-                        column: x => x.idUsuario,
-                        principalTable: "Usuario",
-                        principalColumn: "idUsuario",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Perfil_Usuario",
-                columns: table => new
-                {
-                    idPerfil = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    idUsuario = table.Column<int>(type: "integer", nullable: false),
-                    nomePerfil = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: false),
-                    categoriaPerfil = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true),
-                    descricaoPerfil = table.Column<string>(type: "character varying(500)", unicode: false, maxLength: 500, nullable: true),
-                    fotoPerfilUrl = table.Column<string>(type: "text", unicode: false, nullable: true),
-                    redeSocialPerfil = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: true),
-                    tipoLocalUsuario = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_perfil_usuario", x => x.idPerfil);
-                    table.ForeignKey(
-                        name: "fk_perfil_usuario_usuario_id_usuario",
-                        column: x => x.idUsuario,
-                        principalTable: "Usuario",
-                        principalColumn: "idUsuario",
+                        name: "fk_assinatura_planos_usuarios_id_usuario",
+                        column: x => x.id_usuario,
+                        principalTable: "usuarios",
+                        principalColumn: "id_usuario",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContratacaoServico",
+                name: "perfil_usuarios",
                 columns: table => new
                 {
-                    idContratacaoServico = table.Column<int>(type: "integer", nullable: false)
+                    id_perfil = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    idUsuarioContratante = table.Column<int>(type: "integer", nullable: false),
-                    idPerfilContratado = table.Column<int>(type: "integer", nullable: false),
-                    dataContratacao = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "NOW()"),
-                    valorCombinado = table.Column<decimal>(type: "numeric(10,2)", nullable: true),
-                    statusContratacao = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: true)
+                    id_usuario = table.Column<int>(type: "integer", nullable: false),
+                    nome_perfil = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    categoria_perfil = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    descricao_perfil = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    foto_perfil_url = table.Column<string>(type: "text", nullable: true),
+                    rede_social_perfil = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    tipo_local_usuario = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_contratacao_servico", x => x.idContratacaoServico);
+                    table.PrimaryKey("pk_perfil_usuarios", x => x.id_perfil);
                     table.ForeignKey(
-                        name: "fk_contratacao_servico_perfil_usuario_id_perfil_contratado",
-                        column: x => x.idPerfilContratado,
-                        principalTable: "Perfil_Usuario",
-                        principalColumn: "idPerfil",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_contratacao_servico_usuario_id_usuario_contratante",
-                        column: x => x.idUsuarioContratante,
-                        principalTable: "Usuario",
-                        principalColumn: "idUsuario",
+                        name: "fk_perfil_usuarios_usuarios_id_usuario",
+                        column: x => x.id_usuario,
+                        principalTable: "usuarios",
+                        principalColumn: "id_usuario",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServicoOferecido",
+                name: "contratacao_servicos",
                 columns: table => new
                 {
-                    idServicoOferecido = table.Column<int>(type: "integer", nullable: false)
+                    id_contratacao_servico = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    idPerfil = table.Column<int>(type: "integer", nullable: false),
-                    nomeServico = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: false),
-                    descricaoServico = table.Column<string>(type: "character varying(500)", unicode: false, maxLength: 500, nullable: true),
-                    precoBase = table.Column<decimal>(type: "numeric(10,2)", nullable: true)
+                    id_usuario_contratante = table.Column<int>(type: "integer", nullable: false),
+                    id_perfil_contratado = table.Column<int>(type: "integer", nullable: false),
+                    data_contratacao = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    valor_combinado = table.Column<decimal>(type: "numeric(10,2)", nullable: true),
+                    status_contratacao = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_servico_oferecido", x => x.idServicoOferecido);
+                    table.PrimaryKey("pk_contratacao_servicos", x => x.id_contratacao_servico);
                     table.ForeignKey(
-                        name: "fk_servico_oferecido_perfil_usuario_id_perfil",
-                        column: x => x.idPerfil,
-                        principalTable: "Perfil_Usuario",
-                        principalColumn: "idPerfil",
+                        name: "fk_contratacao_servicos_perfil_usuarios_id_perfil_contratado",
+                        column: x => x.id_perfil_contratado,
+                        principalTable: "perfil_usuarios",
+                        principalColumn: "id_perfil",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_contratacao_servicos_usuarios_id_usuario_contratante",
+                        column: x => x.id_usuario_contratante,
+                        principalTable: "usuarios",
+                        principalColumn: "id_usuario",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Usuario_Avalia_Perfil",
+                name: "servico_oferecidos",
                 columns: table => new
                 {
-                    idUsuarioAvaliador = table.Column<int>(type: "integer", nullable: false),
-                    idPerfilAvaliado = table.Column<int>(type: "integer", nullable: false),
-                    idAvaliacao = table.Column<int>(type: "integer", nullable: false)
+                    id_servico_oferecido = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id_perfil = table.Column<int>(type: "integer", nullable: false),
+                    nome_servico = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    descricao_servico = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    preco_base = table.Column<decimal>(type: "numeric(10,2)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_usuario_avalia_perfil", x => new { x.idUsuarioAvaliador, x.idPerfilAvaliado });
+                    table.PrimaryKey("pk_servico_oferecidos", x => x.id_servico_oferecido);
                     table.ForeignKey(
-                        name: "fk_usuario_avalia_perfil_avaliacao_id_avaliacao",
-                        column: x => x.idAvaliacao,
-                        principalTable: "Avaliacao",
-                        principalColumn: "idAvaliacao",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_usuario_avalia_perfil_perfil_usuario_id_perfil_avaliado",
-                        column: x => x.idPerfilAvaliado,
-                        principalTable: "Perfil_Usuario",
-                        principalColumn: "idPerfil",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_usuario_avalia_perfil_usuario_id_usuario_avaliador",
-                        column: x => x.idUsuarioAvaliador,
-                        principalTable: "Usuario",
-                        principalColumn: "idUsuario",
+                        name: "fk_servico_oferecidos_perfil_usuarios_id_perfil",
+                        column: x => x.id_perfil,
+                        principalTable: "perfil_usuarios",
+                        principalColumn: "id_perfil",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pagamento",
+                name: "usuario_avalia_perfis",
                 columns: table => new
                 {
-                    idPagamento = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    idContratacaoServico = table.Column<int>(type: "integer", nullable: true),
-                    idAssinaturaPlano = table.Column<int>(type: "integer", nullable: true),
-                    idCupom = table.Column<int>(type: "integer", nullable: true),
-                    valorBruto = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    valorDesconto = table.Column<decimal>(type: "numeric(10,2)", nullable: true),
-                    valorFinal = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    formaPagamento = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true),
-                    idTransacao = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: true),
-                    statusPagamento = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false),
-                    dataPagamento = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "NOW()")
+                    id_usuario_avaliador = table.Column<int>(type: "integer", nullable: false),
+                    id_perfil_avaliado = table.Column<int>(type: "integer", nullable: false),
+                    id_avaliacao = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_pagamento", x => x.idPagamento);
+                    table.PrimaryKey("pk_usuario_avalia_perfis", x => new { x.id_usuario_avaliador, x.id_perfil_avaliado });
                     table.ForeignKey(
-                        name: "fk_pagamento_assinatura_plano_id_assinatura_plano",
-                        column: x => x.idAssinaturaPlano,
-                        principalTable: "AssinaturaPlano",
-                        principalColumn: "idAssinaturaPlano");
+                        name: "fk_usuario_avalia_perfis_avaliacoes_id_avaliacao",
+                        column: x => x.id_avaliacao,
+                        principalTable: "avaliacoes",
+                        principalColumn: "id_avaliacao",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_pagamento_contratacao_servico_id_contratacao_servico",
-                        column: x => x.idContratacaoServico,
-                        principalTable: "ContratacaoServico",
-                        principalColumn: "idContratacaoServico");
+                        name: "fk_usuario_avalia_perfis_perfil_usuarios_id_perfil_avaliado",
+                        column: x => x.id_perfil_avaliado,
+                        principalTable: "perfil_usuarios",
+                        principalColumn: "id_perfil",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_pagamento_cupom_desconto_id_cupom",
-                        column: x => x.idCupom,
-                        principalTable: "CupomDesconto",
-                        principalColumn: "idCupom");
+                        name: "fk_usuario_avalia_perfis_usuarios_id_usuario_avaliador",
+                        column: x => x.id_usuario_avaliador,
+                        principalTable: "usuarios",
+                        principalColumn: "id_usuario",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "pagamentos",
+                columns: table => new
+                {
+                    id_pagamento = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id_contratacao_servico = table.Column<int>(type: "integer", nullable: true),
+                    id_assinatura_plano = table.Column<int>(type: "integer", nullable: true),
+                    id_cupom = table.Column<int>(type: "integer", nullable: true),
+                    valor_bruto = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    valor_desconto = table.Column<decimal>(type: "numeric(10,2)", nullable: true),
+                    valor_final = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    forma_pagamento = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    id_transacao = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    status_pagamento = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    data_pagamento = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_pagamentos", x => x.id_pagamento);
+                    table.ForeignKey(
+                        name: "fk_pagamentos_assinatura_planos_id_assinatura_plano",
+                        column: x => x.id_assinatura_plano,
+                        principalTable: "assinatura_planos",
+                        principalColumn: "id_assinatura_plano");
+                    table.ForeignKey(
+                        name: "fk_pagamentos_contratacao_servicos_id_contratacao_servico",
+                        column: x => x.id_contratacao_servico,
+                        principalTable: "contratacao_servicos",
+                        principalColumn: "id_contratacao_servico");
+                    table.ForeignKey(
+                        name: "fk_pagamentos_cupom_descontos_id_cupom",
+                        column: x => x.id_cupom,
+                        principalTable: "cupom_descontos",
+                        principalColumn: "id_cupom");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_assinatura_plano_id_plano",
-                table: "AssinaturaPlano",
-                column: "idPlano");
+                name: "ix_assinatura_planos_id_plano",
+                table: "assinatura_planos",
+                column: "id_plano");
 
             migrationBuilder.CreateIndex(
-                name: "ix_assinatura_plano_id_usuario",
-                table: "AssinaturaPlano",
-                column: "idUsuario");
+                name: "ix_assinatura_planos_id_usuario",
+                table: "assinatura_planos",
+                column: "id_usuario");
 
             migrationBuilder.CreateIndex(
-                name: "ix_contratacao_servico_id_perfil_contratado",
-                table: "ContratacaoServico",
-                column: "idPerfilContratado");
+                name: "ix_contratacao_servicos_id_perfil_contratado",
+                table: "contratacao_servicos",
+                column: "id_perfil_contratado");
 
             migrationBuilder.CreateIndex(
-                name: "ix_contratacao_servico_id_usuario_contratante",
-                table: "ContratacaoServico",
-                column: "idUsuarioContratante");
+                name: "ix_contratacao_servicos_id_usuario_contratante",
+                table: "contratacao_servicos",
+                column: "id_usuario_contratante");
 
             migrationBuilder.CreateIndex(
-                name: "ix_cupom_desconto_codigo_cupom",
-                table: "CupomDesconto",
-                column: "codigoCupom",
+                name: "ix_cupom_descontos_codigo_cupom",
+                table: "cupom_descontos",
+                column: "codigo_cupom",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_pagamento_id_assinatura_plano",
-                table: "Pagamento",
-                column: "idAssinaturaPlano");
+                name: "ix_pagamentos_id_assinatura_plano",
+                table: "pagamentos",
+                column: "id_assinatura_plano");
 
             migrationBuilder.CreateIndex(
-                name: "ix_pagamento_id_contratacao_servico",
-                table: "Pagamento",
-                column: "idContratacaoServico");
+                name: "ix_pagamentos_id_contratacao_servico",
+                table: "pagamentos",
+                column: "id_contratacao_servico");
 
             migrationBuilder.CreateIndex(
-                name: "ix_pagamento_id_cupom",
-                table: "Pagamento",
-                column: "idCupom");
+                name: "ix_pagamentos_id_cupom",
+                table: "pagamentos",
+                column: "id_cupom");
 
             migrationBuilder.CreateIndex(
-                name: "ix_perfil_usuario_id_usuario",
-                table: "Perfil_Usuario",
-                column: "idUsuario");
+                name: "ix_perfil_usuarios_id_usuario",
+                table: "perfil_usuarios",
+                column: "id_usuario");
 
             migrationBuilder.CreateIndex(
-                name: "ix_servico_oferecido_id_perfil",
-                table: "ServicoOferecido",
-                column: "idPerfil");
+                name: "ix_servico_oferecidos_id_perfil",
+                table: "servico_oferecidos",
+                column: "id_perfil");
 
             migrationBuilder.CreateIndex(
-                name: "ix_usuario_email_usuario",
-                table: "Usuario",
-                column: "emailUsuario",
+                name: "ix_usuarios_email_usuario",
+                table: "usuarios",
+                column: "email_usuario",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_usuario_avalia_perfil_id_avaliacao",
-                table: "Usuario_Avalia_Perfil",
-                column: "idAvaliacao");
+                name: "ix_usuario_avalia_perfis_id_avaliacao",
+                table: "usuario_avalia_perfis",
+                column: "id_avaliacao");
 
             migrationBuilder.CreateIndex(
-                name: "ix_usuario_avalia_perfil_id_perfil_avaliado",
-                table: "Usuario_Avalia_Perfil",
-                column: "idPerfilAvaliado");
+                name: "ix_usuario_avalia_perfis_id_perfil_avaliado",
+                table: "usuario_avalia_perfis",
+                column: "id_perfil_avaliado");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Pagamento");
+                name: "pagamentos");
 
             migrationBuilder.DropTable(
-                name: "ServicoOferecido");
+                name: "servico_oferecidos");
 
             migrationBuilder.DropTable(
-                name: "Usuario_Avalia_Perfil");
+                name: "usuario_avalia_perfis");
 
             migrationBuilder.DropTable(
-                name: "AssinaturaPlano");
+                name: "assinatura_planos");
 
             migrationBuilder.DropTable(
-                name: "ContratacaoServico");
+                name: "contratacao_servicos");
 
             migrationBuilder.DropTable(
-                name: "CupomDesconto");
+                name: "cupom_descontos");
 
             migrationBuilder.DropTable(
-                name: "Avaliacao");
+                name: "avaliacoes");
 
             migrationBuilder.DropTable(
-                name: "Plano");
+                name: "planos");
 
             migrationBuilder.DropTable(
-                name: "Perfil_Usuario");
+                name: "perfil_usuarios");
 
             migrationBuilder.DropTable(
-                name: "Usuario");
+                name: "usuarios");
         }
     }
 }
