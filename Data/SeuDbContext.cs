@@ -113,6 +113,7 @@ public partial class SeuDbContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
+            entity.ToTable("Usuarios");
             entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__645723A6A1C27A4F");
 
             entity.Property(e => e.CepUsuario).IsFixedLength();
