@@ -48,7 +48,8 @@ else
 }
 
 builder.Services.AddDbContext<SeuDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString)
+.UseSnakeCaseNamingConvention());
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
@@ -90,7 +91,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-await ApplyMigrationsAsync(app.Services);
+//await ApplyMigrationsAsync(app.Services);
 
     app.UseSwagger(); // movi para fora para poder abrir o swagger
     app.UseSwaggerUI();

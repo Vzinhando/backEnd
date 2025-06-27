@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackEndDemoday.Migrations
 {
     /// <inheritdoc />
-    public partial class FinalCorrectedMigration : Migration
+    public partial class V1_TheFinalSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,7 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Avaliaca__2A0C83123A7CE11B", x => x.idAvaliacao);
+                    table.PrimaryKey("pk_avaliacao", x => x.idAvaliacao);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,7 +41,7 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__CupomDes__9AD8BF9D617FB24F", x => x.idCupom);
+                    table.PrimaryKey("pk_cupom_desconto", x => x.idCupom);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,7 +56,7 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Plano__39B8602232BA9038", x => x.idPlano);
+                    table.PrimaryKey("pk_plano", x => x.idPlano);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,15 +71,15 @@ namespace BackEndDemoday.Migrations
                     tipoUsuario = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false),
                     dataCadastroUsuario = table.Column<DateOnly>(type: "date", nullable: true, defaultValueSql: "NOW()"),
                     dataNascimentoUsuario = table.Column<DateOnly>(type: "date", nullable: true),
-                    sexoUsuario = table.Column<string>(type: "character(1)", unicode: false, fixedLength: true, maxLength: 1, nullable: true),
-                    cepUsuario = table.Column<string>(type: "character(9)", unicode: false, fixedLength: true, maxLength: 9, nullable: true),
+                    sexoUsuario = table.Column<string>(type: "character varying(1)", unicode: false, maxLength: 1, nullable: true),
+                    cepUsuario = table.Column<string>(type: "character varying(9)", unicode: false, maxLength: 9, nullable: true),
                     enderecoUsuario = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: true),
                     cidadeUsuario = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: true),
                     telefoneUsuario = table.Column<string>(type: "character varying(20)", unicode: false, maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Usuario__645723A6A1C27A4F", x => x.idUsuario);
+                    table.PrimaryKey("pk_usuario", x => x.idUsuario);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,17 +96,19 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Assinatu__0D8DAB1EC7C70527", x => x.idAssinaturaPlano);
+                    table.PrimaryKey("pk_assinatura_plano", x => x.idAssinaturaPlano);
                     table.ForeignKey(
-                        name: "FK_Assinatura_Plano",
+                        name: "fk_assinatura_plano_plano_id_plano",
                         column: x => x.idPlano,
                         principalTable: "Plano",
-                        principalColumn: "idPlano");
+                        principalColumn: "idPlano",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Assinatura_Usuario",
+                        name: "fk_assinatura_plano_usuario_id_usuario",
                         column: x => x.idUsuario,
                         principalTable: "Usuario",
-                        principalColumn: "idUsuario");
+                        principalColumn: "idUsuario",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,9 +127,9 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Perfil_U__40F13B607DADE508", x => x.idPerfil);
+                    table.PrimaryKey("pk_perfil_usuario", x => x.idPerfil);
                     table.ForeignKey(
-                        name: "FK_Perfil_Usuario_Usuario",
+                        name: "fk_perfil_usuario_usuario_id_usuario",
                         column: x => x.idUsuario,
                         principalTable: "Usuario",
                         principalColumn: "idUsuario",
@@ -148,17 +150,19 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Contrata__8D88D7932FE978B5", x => x.idContratacaoServico);
+                    table.PrimaryKey("pk_contratacao_servico", x => x.idContratacaoServico);
                     table.ForeignKey(
-                        name: "FK_Contratacao_PerfilContratado",
+                        name: "fk_contratacao_servico_perfil_usuario_id_perfil_contratado",
                         column: x => x.idPerfilContratado,
                         principalTable: "Perfil_Usuario",
-                        principalColumn: "idPerfil");
+                        principalColumn: "idPerfil",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Contratacao_UsuarioContratante",
+                        name: "fk_contratacao_servico_usuario_id_usuario_contratante",
                         column: x => x.idUsuarioContratante,
                         principalTable: "Usuario",
-                        principalColumn: "idUsuario");
+                        principalColumn: "idUsuario",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,9 +178,9 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__ServicoO__B42AD94B8C0AEC98", x => x.idServicoOferecido);
+                    table.PrimaryKey("pk_servico_oferecido", x => x.idServicoOferecido);
                     table.ForeignKey(
-                        name: "FK_Servico_Perfil",
+                        name: "fk_servico_oferecido_perfil_usuario_id_perfil",
                         column: x => x.idPerfil,
                         principalTable: "Perfil_Usuario",
                         principalColumn: "idPerfil",
@@ -193,23 +197,25 @@ namespace BackEndDemoday.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Usuario___7112A8AE848BC099", x => new { x.idUsuarioAvaliador, x.idPerfilAvaliado });
+                    table.PrimaryKey("pk_usuario_avalia_perfil", x => new { x.idUsuarioAvaliador, x.idPerfilAvaliado });
                     table.ForeignKey(
-                        name: "FK_Avaliacao_Avaliacao",
+                        name: "fk_usuario_avalia_perfil_avaliacao_id_avaliacao",
                         column: x => x.idAvaliacao,
                         principalTable: "Avaliacao",
                         principalColumn: "idAvaliacao",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Avaliacao_Perfil",
+                        name: "fk_usuario_avalia_perfil_perfil_usuario_id_perfil_avaliado",
                         column: x => x.idPerfilAvaliado,
                         principalTable: "Perfil_Usuario",
-                        principalColumn: "idPerfil");
+                        principalColumn: "idPerfil",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Avaliacao_Usuario",
+                        name: "fk_usuario_avalia_perfil_usuario_id_usuario_avaliador",
                         column: x => x.idUsuarioAvaliador,
                         principalTable: "Usuario",
-                        principalColumn: "idUsuario");
+                        principalColumn: "idUsuario",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,92 +233,92 @@ namespace BackEndDemoday.Migrations
                     formaPagamento = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true),
                     idTransacao = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: true),
                     statusPagamento = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false),
-                    dataPagamento = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "NOW()")
+                    dataPagamento = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Pagament__866960F6C4BF8598", x => x.idPagamento);
+                    table.PrimaryKey("pk_pagamento", x => x.idPagamento);
                     table.ForeignKey(
-                        name: "FK_Pagamento_AssinaturaPlano",
+                        name: "fk_pagamento_assinatura_plano_id_assinatura_plano",
                         column: x => x.idAssinaturaPlano,
                         principalTable: "AssinaturaPlano",
                         principalColumn: "idAssinaturaPlano");
                     table.ForeignKey(
-                        name: "FK_Pagamento_ContratacaoServico",
+                        name: "fk_pagamento_contratacao_servico_id_contratacao_servico",
                         column: x => x.idContratacaoServico,
                         principalTable: "ContratacaoServico",
                         principalColumn: "idContratacaoServico");
                     table.ForeignKey(
-                        name: "FK_Pagamento_CupomDesconto",
+                        name: "fk_pagamento_cupom_desconto_id_cupom",
                         column: x => x.idCupom,
                         principalTable: "CupomDesconto",
                         principalColumn: "idCupom");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssinaturaPlano_idPlano",
+                name: "ix_assinatura_plano_id_plano",
                 table: "AssinaturaPlano",
                 column: "idPlano");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssinaturaPlano_idUsuario",
+                name: "ix_assinatura_plano_id_usuario",
                 table: "AssinaturaPlano",
                 column: "idUsuario");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContratacaoServico_idPerfilContratado",
+                name: "ix_contratacao_servico_id_perfil_contratado",
                 table: "ContratacaoServico",
                 column: "idPerfilContratado");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContratacaoServico_idUsuarioContratante",
+                name: "ix_contratacao_servico_id_usuario_contratante",
                 table: "ContratacaoServico",
                 column: "idUsuarioContratante");
 
             migrationBuilder.CreateIndex(
-                name: "UQ_Cupom_Codigo",
+                name: "ix_cupom_desconto_codigo_cupom",
                 table: "CupomDesconto",
                 column: "codigoCupom",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pagamento_idAssinaturaPlano",
+                name: "ix_pagamento_id_assinatura_plano",
                 table: "Pagamento",
                 column: "idAssinaturaPlano");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pagamento_idContratacaoServico",
+                name: "ix_pagamento_id_contratacao_servico",
                 table: "Pagamento",
                 column: "idContratacaoServico");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pagamento_idCupom",
+                name: "ix_pagamento_id_cupom",
                 table: "Pagamento",
                 column: "idCupom");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Perfil_Usuario_idUsuario",
+                name: "ix_perfil_usuario_id_usuario",
                 table: "Perfil_Usuario",
                 column: "idUsuario");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServicoOferecido_idPerfil",
+                name: "ix_servico_oferecido_id_perfil",
                 table: "ServicoOferecido",
                 column: "idPerfil");
 
             migrationBuilder.CreateIndex(
-                name: "UQ_Usuario_Email",
+                name: "ix_usuario_email_usuario",
                 table: "Usuario",
                 column: "emailUsuario",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Usuario_Avalia_Perfil_idAvaliacao",
+                name: "ix_usuario_avalia_perfil_id_avaliacao",
                 table: "Usuario_Avalia_Perfil",
                 column: "idAvaliacao");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Usuario_Avalia_Perfil_idPerfilAvaliado",
+                name: "ix_usuario_avalia_perfil_id_perfil_avaliado",
                 table: "Usuario_Avalia_Perfil",
                 column: "idPerfilAvaliado");
         }

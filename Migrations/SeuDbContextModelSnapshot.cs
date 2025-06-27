@@ -57,11 +57,13 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("statusAssinatura");
 
                     b.HasKey("IdAssinaturaPlano")
-                        .HasName("PK__Assinatu__0D8DAB1EC7C70527");
+                        .HasName("pk_assinatura_plano");
 
-                    b.HasIndex("IdPlano");
+                    b.HasIndex("IdPlano")
+                        .HasDatabaseName("ix_assinatura_plano_id_plano");
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("IdUsuario")
+                        .HasDatabaseName("ix_assinatura_plano_id_usuario");
 
                     b.ToTable("AssinaturaPlano");
                 });
@@ -92,7 +94,7 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("estrelasAvaliacao");
 
                     b.HasKey("IdAvaliacao")
-                        .HasName("PK__Avaliaca__2A0C83123A7CE11B");
+                        .HasName("pk_avaliacao");
 
                     b.ToTable("Avaliacao");
                 });
@@ -131,11 +133,13 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("valorCombinado");
 
                     b.HasKey("IdContratacaoServico")
-                        .HasName("PK__Contrata__8D88D7932FE978B5");
+                        .HasName("pk_contratacao_servico");
 
-                    b.HasIndex("IdPerfilContratado");
+                    b.HasIndex("IdPerfilContratado")
+                        .HasDatabaseName("ix_contratacao_servico_id_perfil_contratado");
 
-                    b.HasIndex("IdUsuarioContratante");
+                    b.HasIndex("IdUsuarioContratante")
+                        .HasDatabaseName("ix_contratacao_servico_id_usuario_contratante");
 
                     b.ToTable("ContratacaoServico");
                 });
@@ -178,10 +182,11 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("tipoCupom");
 
                     b.HasKey("IdCupom")
-                        .HasName("PK__CupomDes__9AD8BF9D617FB24F");
+                        .HasName("pk_cupom_desconto");
 
                     b.HasIndex(new[] { "CodigoCupom" }, "UQ_Cupom_Codigo")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_cupom_desconto_codigo_cupom");
 
                     b.ToTable("CupomDesconto");
                 });
@@ -197,7 +202,7 @@ namespace BackEndDemoday.Migrations
 
                     b.Property<DateTime?>("DataPagamento")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("dataPagamento")
                         .HasDefaultValueSql("NOW()");
 
@@ -245,13 +250,16 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("valorFinal");
 
                     b.HasKey("IdPagamento")
-                        .HasName("PK__Pagament__866960F6C4BF8598");
+                        .HasName("pk_pagamento");
 
-                    b.HasIndex("IdAssinaturaPlano");
+                    b.HasIndex("IdAssinaturaPlano")
+                        .HasDatabaseName("ix_pagamento_id_assinatura_plano");
 
-                    b.HasIndex("IdContratacaoServico");
+                    b.HasIndex("IdContratacaoServico")
+                        .HasDatabaseName("ix_pagamento_id_contratacao_servico");
 
-                    b.HasIndex("IdCupom");
+                    b.HasIndex("IdCupom")
+                        .HasDatabaseName("ix_pagamento_id_cupom");
 
                     b.ToTable("Pagamento");
                 });
@@ -306,9 +314,10 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("tipoLocalUsuario");
 
                     b.HasKey("IdPerfil")
-                        .HasName("PK__Perfil_U__40F13B607DADE508");
+                        .HasName("pk_perfil_usuario");
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("IdUsuario")
+                        .HasDatabaseName("ix_perfil_usuario_id_usuario");
 
                     b.ToTable("Perfil_Usuario");
                 });
@@ -341,7 +350,7 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("valorPlano");
 
                     b.HasKey("IdPlano")
-                        .HasName("PK__Plano__39B8602232BA9038");
+                        .HasName("pk_plano");
 
                     b.ToTable("Plano");
                 });
@@ -377,9 +386,10 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("precoBase");
 
                     b.HasKey("IdServicoOferecido")
-                        .HasName("PK__ServicoO__B42AD94B8C0AEC98");
+                        .HasName("pk_servico_oferecido");
 
-                    b.HasIndex("IdPerfil");
+                    b.HasIndex("IdPerfil")
+                        .HasDatabaseName("ix_servico_oferecido_id_perfil");
 
                     b.ToTable("ServicoOferecido");
                 });
@@ -396,9 +406,8 @@ namespace BackEndDemoday.Migrations
                     b.Property<string>("CepUsuario")
                         .HasMaxLength(9)
                         .IsUnicode(false)
-                        .HasColumnType("character(9)")
-                        .HasColumnName("cepUsuario")
-                        .IsFixedLength();
+                        .HasColumnType("character varying(9)")
+                        .HasColumnName("cepUsuario");
 
                     b.Property<string>("CidadeUsuario")
                         .HasMaxLength(100)
@@ -446,9 +455,8 @@ namespace BackEndDemoday.Migrations
                     b.Property<string>("SexoUsuario")
                         .HasMaxLength(1)
                         .IsUnicode(false)
-                        .HasColumnType("character(1)")
-                        .HasColumnName("sexoUsuario")
-                        .IsFixedLength();
+                        .HasColumnType("character varying(1)")
+                        .HasColumnName("sexoUsuario");
 
                     b.Property<string>("TelefoneUsuario")
                         .HasMaxLength(20)
@@ -464,12 +472,17 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("tipoUsuario");
 
                     b.HasKey("IdUsuario")
-                        .HasName("PK__Usuario__645723A6A1C27A4F");
+                        .HasName("pk_usuario");
+
+                    b.HasIndex("EmailUsuario")
+                        .IsUnique()
+                        .HasDatabaseName("ix_usuario_email_usuario");
 
                     b.HasIndex(new[] { "EmailUsuario" }, "UQ_Usuario_Email")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_usuario_email_usuario");
 
-                    b.ToTable("Usuarios", (string)null);
+                    b.ToTable("Usuario");
                 });
 
             modelBuilder.Entity("BackEndDemoday.Entities.UsuarioAvaliaPerfil", b =>
@@ -487,11 +500,13 @@ namespace BackEndDemoday.Migrations
                         .HasColumnName("idAvaliacao");
 
                     b.HasKey("IdUsuarioAvaliador", "IdPerfilAvaliado")
-                        .HasName("PK__Usuario___7112A8AE848BC099");
+                        .HasName("pk_usuario_avalia_perfil");
 
-                    b.HasIndex("IdAvaliacao");
+                    b.HasIndex("IdAvaliacao")
+                        .HasDatabaseName("ix_usuario_avalia_perfil_id_avaliacao");
 
-                    b.HasIndex("IdPerfilAvaliado");
+                    b.HasIndex("IdPerfilAvaliado")
+                        .HasDatabaseName("ix_usuario_avalia_perfil_id_perfil_avaliado");
 
                     b.ToTable("Usuario_Avalia_Perfil");
                 });
@@ -501,14 +516,16 @@ namespace BackEndDemoday.Migrations
                     b.HasOne("BackEndDemoday.Entities.Plano", "IdPlanoNavigation")
                         .WithMany("AssinaturaPlanos")
                         .HasForeignKey("IdPlano")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Assinatura_Plano");
+                        .HasConstraintName("fk_assinatura_plano_plano_id_plano");
 
                     b.HasOne("BackEndDemoday.Entities.Usuario", "IdUsuarioNavigation")
                         .WithMany("AssinaturaPlanos")
                         .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Assinatura_Usuario");
+                        .HasConstraintName("fk_assinatura_plano_usuario_id_usuario");
 
                     b.Navigation("IdPlanoNavigation");
 
@@ -520,14 +537,16 @@ namespace BackEndDemoday.Migrations
                     b.HasOne("BackEndDemoday.Entities.PerfilUsuario", "IdPerfilContratadoNavigation")
                         .WithMany("ContratacaoServicos")
                         .HasForeignKey("IdPerfilContratado")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Contratacao_PerfilContratado");
+                        .HasConstraintName("fk_contratacao_servico_perfil_usuario_id_perfil_contratado");
 
                     b.HasOne("BackEndDemoday.Entities.Usuario", "IdUsuarioContratanteNavigation")
                         .WithMany("ContratacaoServicos")
                         .HasForeignKey("IdUsuarioContratante")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Contratacao_UsuarioContratante");
+                        .HasConstraintName("fk_contratacao_servico_usuario_id_usuario_contratante");
 
                     b.Navigation("IdPerfilContratadoNavigation");
 
@@ -539,17 +558,17 @@ namespace BackEndDemoday.Migrations
                     b.HasOne("BackEndDemoday.Entities.AssinaturaPlano", "IdAssinaturaPlanoNavigation")
                         .WithMany("Pagamentos")
                         .HasForeignKey("IdAssinaturaPlano")
-                        .HasConstraintName("FK_Pagamento_AssinaturaPlano");
+                        .HasConstraintName("fk_pagamento_assinatura_plano_id_assinatura_plano");
 
                     b.HasOne("BackEndDemoday.Entities.ContratacaoServico", "IdContratacaoServicoNavigation")
                         .WithMany("Pagamentos")
                         .HasForeignKey("IdContratacaoServico")
-                        .HasConstraintName("FK_Pagamento_ContratacaoServico");
+                        .HasConstraintName("fk_pagamento_contratacao_servico_id_contratacao_servico");
 
                     b.HasOne("BackEndDemoday.Entities.CupomDesconto", "IdCupomNavigation")
                         .WithMany("Pagamentos")
                         .HasForeignKey("IdCupom")
-                        .HasConstraintName("FK_Pagamento_CupomDesconto");
+                        .HasConstraintName("fk_pagamento_cupom_desconto_id_cupom");
 
                     b.Navigation("IdAssinaturaPlanoNavigation");
 
@@ -565,7 +584,7 @@ namespace BackEndDemoday.Migrations
                         .HasForeignKey("IdUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Perfil_Usuario_Usuario");
+                        .HasConstraintName("fk_perfil_usuario_usuario_id_usuario");
 
                     b.Navigation("IdUsuarioNavigation");
                 });
@@ -577,7 +596,7 @@ namespace BackEndDemoday.Migrations
                         .HasForeignKey("IdPerfil")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Servico_Perfil");
+                        .HasConstraintName("fk_servico_oferecido_perfil_usuario_id_perfil");
 
                     b.Navigation("IdPerfilNavigation");
                 });
@@ -589,19 +608,21 @@ namespace BackEndDemoday.Migrations
                         .HasForeignKey("IdAvaliacao")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Avaliacao_Avaliacao");
+                        .HasConstraintName("fk_usuario_avalia_perfil_avaliacao_id_avaliacao");
 
                     b.HasOne("BackEndDemoday.Entities.PerfilUsuario", "IdPerfilAvaliadoNavigation")
                         .WithMany("UsuarioAvaliaPerfils")
                         .HasForeignKey("IdPerfilAvaliado")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Avaliacao_Perfil");
+                        .HasConstraintName("fk_usuario_avalia_perfil_perfil_usuario_id_perfil_avaliado");
 
                     b.HasOne("BackEndDemoday.Entities.Usuario", "IdUsuarioAvaliadorNavigation")
                         .WithMany("UsuarioAvaliaPerfils")
                         .HasForeignKey("IdUsuarioAvaliador")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_Avaliacao_Usuario");
+                        .HasConstraintName("fk_usuario_avalia_perfil_usuario_id_usuario_avaliador");
 
                     b.Navigation("IdAvaliacaoNavigation");
 
