@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("ProductionPolicy",
         policy =>
         {
-            var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
+            var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL"); // conecxao front
             if (!string.IsNullOrEmpty(frontendUrl))
             {
                 policy.WithOrigins(frontendUrl)
@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
 });
 
 string connectionString;
-var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL"); // conecxao com railway
 
 if (!string.IsNullOrEmpty(databaseUrl))
 {
@@ -48,7 +48,7 @@ else
 }
 
 builder.Services.AddDbContext<SeuDbContext>(options =>
-    options.UseNpgsql(connectionString)
+    options.UseNpgsql(connectionString)  // conecxao banco de dados
 .UseSnakeCaseNamingConvention());
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
@@ -91,7 +91,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-//await ApplyMigrationsAsync(app.Services);
+await ApplyMigrationsAsync(app.Services);
 
     app.UseSwagger(); // movi para fora para poder abrir o swagger
     app.UseSwaggerUI();
