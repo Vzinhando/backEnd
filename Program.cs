@@ -45,10 +45,10 @@ builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-    app.UseSwagger(); // subi essas 2 linhas para abrir o swagger, caso nao queira acessar o swagger coloque dentro do if abaixo
-    app.UseSwaggerUI();
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger(); // subi essas 2 linhas para abrir o swagger, caso nao queira acessar o swagger coloque dentro do if abaixo
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

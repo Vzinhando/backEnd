@@ -54,43 +54,32 @@ namespace ApiDemoday.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeletarFotoUsuario(int id)
         {
-            // 1. Encontra o usuário no banco
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound("Usuário não encontrado.");
             }
 
-            // 2. Verifica se existe uma URL de foto para deletar
             if (string.IsNullOrEmpty(usuario.FotoUsuario))
             {
                 return BadRequest("O usuário não possui uma foto para deletar.");
             }
 
-            // 3. Extrai o "Public ID" da URL da imagem
-            // Ex: de "https://.../upload/v123/nome_arquivo.jpg" para "nome_arquivo"
             var uri = new Uri(usuario.FotoUsuario);
             var publicId = Path.GetFileNameWithoutExtension(uri.Segments.Last());
 
-            // 4. Cria os parâmetros de deleção para o Cloudinary
             var deletionParams = new DeletionParams(publicId);
 
-            // 5. Envia a requisição de deleção para o Cloudinary
             var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
 
             if (deletionResult.Error != null)
             {
-                // Se a deleção no Cloudinary falhar, retorna um erro
-                // (Isso pode acontecer se a imagem já foi deletada, por exemplo)
-                // Mesmo assim, vamos continuar para limpar o banco de dados.
                 Console.WriteLine($"Erro ao deletar imagem do Cloudinary: {deletionResult.Error.Message}");
             }
 
-            // 6. Remove a referência da URL do banco de dados
             usuario.FotoUsuario = null;
             await _context.SaveChangesAsync();
 
-            // 7. Retorna sucesso
             return NoContent();
         }
     }
