@@ -21,7 +21,7 @@ namespace ApiDemoday.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("cadastro")]
+        [HttpPost("cadastro")] // para fazer o cadastro 
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UsuarioExibicaoDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CadastrarUsuario([FromBody] UsuarioCadastroDto usuarioCadastroDto)
@@ -44,7 +44,7 @@ namespace ApiDemoday.Controllers
             return CreatedAtAction(nameof(GetUsuarioPorId), new { id = usuario.IdUsuario }, usuarioExibicao);
         }
 
-        [HttpPost("login")]
+        [HttpPost("login")] // faz o teste e tenta entrar LOGIN
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] UsuarioLoginDto usuarioLoginDto)
@@ -62,7 +62,7 @@ namespace ApiDemoday.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet] // pega todas as informações da tabela
         public async Task<ActionResult<IEnumerable<UsuarioExibicaoDto>>> GetUsuarios()
         {
             var usuarios = await _context.Usuarios.ToListAsync();
@@ -83,7 +83,7 @@ namespace ApiDemoday.Controllers
             var usuarioDto = _mapper.Map<UsuarioExibicaoDto>(usuario);
             return Ok(usuarioDto);
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}")] // pega dados por ID
         public async Task<IActionResult> DeleteUsuario(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);

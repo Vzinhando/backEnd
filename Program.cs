@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<RailwayContext>(options => 
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))); //conecxao com o banco
 
 builder.Services.AddAutoMapper(typeof(Program));
 
