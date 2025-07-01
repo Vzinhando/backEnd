@@ -29,7 +29,7 @@ namespace ApiDemoday.Controllers
         {
             if (await _context.Usuarios.AnyAsync(u => u.EmailUsuario == usuarioCadastroDto.EmailUsuario))
             {
-                return BadRequest("Este e-mail já está em uso.");
+                return BadRequest(new { message = "Este e-mail já está em uso." });
             }
 
             var usuario = _mapper.Map<Usuario>(usuarioCadastroDto);
