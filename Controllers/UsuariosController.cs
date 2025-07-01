@@ -91,25 +91,41 @@ namespace ApiDemoday.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PatchUsuario(int id, [FromBody] JsonPatchDocument<UsuarioUpdateDto> patchDoc)
         {
+            Console.WriteLine($"[PATCH /api/usuarios/{id}] - Requisição recebida.");
+
             if (patchDoc == null)
             {
-                return BadRequest();
+                Console.WriteLine("[PATCH] Erro: O documento de patch é nulo.");
+                return BadRequest("O corpo da requisição do patch não pode ser nulo.");
             }
 
             var usuarioFromDb = await _context.Usuarios.FindAsync(id);
             if (usuarioFromDb == null)
             {
+                Console.WriteLine($"[PATCH] Erro: Usuário com ID {id} não encontrado.");
                 return NotFound();
             }
+            Console.WriteLine($"[PATCH] Usuário com ID {id} encontrado no banco.");
 
             var usuarioToPatch = _mapper.Map<UsuarioUpdateDto>(usuarioFromDb);
+            Console.WriteLine("[PATCH] Mapeamento de Entidade para DTO concluído.");
+
             patchDoc.ApplyTo(usuarioToPatch, ModelState);
+            Console.WriteLine("[PATCH] Operações do patch aplicadas ao DTO.");
+
             if (!TryValidateModel(usuarioToPatch))
             {
+                Console.WriteLine("[PATCH] Erro: O modelo se tornou inválido após o patch.");
                 return ValidationProblem(ModelState);
             }
+            Console.WriteLine("[PATCH] Validação do modelo após o patch bem-sucedida.");
+
             _mapper.Map(usuarioToPatch, usuarioFromDb);
+            Console.WriteLine("[PATCH] Mapeamento do DTO de volta para a Entidade concluído.");
+
             await _context.SaveChangesAsync();
+            Console.WriteLine($"[PATCH] Alterações para o usuário {id} salvas no banco. Operação concluída.");
+
             return NoContent();
         }
 
