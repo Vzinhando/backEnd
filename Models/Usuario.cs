@@ -28,6 +28,7 @@ public partial class Usuario
     public string? CidadeUsuario { get; set; }
 
     public string? TelefoneUsuario { get; set; }
+    public string? FotoUsuario { get; set; }
 
     public virtual ICollection<Assinaturaplano> Assinaturaplanos { get; set; } = new List<Assinaturaplano>();
 

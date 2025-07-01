@@ -86,50 +86,29 @@ namespace ApiDemoday.Controllers
         }
 
         [HttpPatch("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Usuario))] // MUDANÇA: Agora retorna o usuário
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PatchUsuario(int id, [FromBody] JsonPatchDocument<UsuarioUpdateDto> patchDoc)
+        public async Task<IActionResult> PatchUsuario(int id, [FromBody] UsuarioUpdateDto dadosAtualizados)
         {
-            Console.WriteLine($"[PATCH /api/usuarios/{id}] - Requisição recebida.");
+            Console.WriteLine($"[PATCH /api/usuarios/{id}] - Requisição recebida com objeto simples.");
 
-            if (patchDoc == null)
-            {
-                Console.WriteLine("[PATCH] Erro: O documento de patch é nulo.");
-                return BadRequest("O corpo da requisição do patch não pode ser nulo.");
-            }
-
-            var usuarioFromDb = await _context.Usuarios.FindAsync(id);
-            if (usuarioFromDb == null)
+            var usuarioNoBanco = await _context.Usuarios.FindAsync(id);
+            if (usuarioNoBanco == null)
             {
                 Console.WriteLine($"[PATCH] Erro: Usuário com ID {id} não encontrado.");
                 return NotFound();
             }
-            Console.WriteLine($"[PATCH] Usuário com ID {id} encontrado no banco.");
-
-            var usuarioToPatch = _mapper.Map<UsuarioUpdateDto>(usuarioFromDb);
-            Console.WriteLine("[PATCH] Mapeamento de Entidade para DTO concluído.");
-
-            patchDoc.ApplyTo(usuarioToPatch, ModelState);
-            Console.WriteLine("[PATCH] Operações do patch aplicadas ao DTO.");
-
-            if (!TryValidateModel(usuarioToPatch))
-            {
-                Console.WriteLine("[PATCH] Erro: O modelo se tornou inválido após o patch.");
-                return ValidationProblem(ModelState);
-            }
-            Console.WriteLine("[PATCH] Validação do modelo após o patch bem-sucedida.");
-
-            _mapper.Map(usuarioToPatch, usuarioFromDb);
-            Console.WriteLine("[PATCH] Mapeamento do DTO de volta para a Entidade concluído.");
-
+            Console.WriteLine($"[PATCH] Usuário com ID {id} encontrado.");
+            usuarioNoBanco.NomeUsuario = dadosAtualizados.NomeUsuario;
+            usuarioNoBanco.CepUsuario = dadosAtualizados.CepUsuario;
             await _context.SaveChangesAsync();
-            Console.WriteLine($"[PATCH] Alterações para o usuário {id} salvas no banco. Operação concluída.");
+            Console.WriteLine($"[PATCH] Alterações para o usuário {id} salvas no banco.");
 
-            return NoContent();
+            return Ok(usuarioNoBanco);
         }
 
-        [HttpDelete("{id}")] // pega dados por ID
+        [HttpDelete("{id}")] // apaga dados por ID
         public async Task<IActionResult> DeleteUsuario(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);

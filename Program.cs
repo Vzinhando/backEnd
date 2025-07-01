@@ -1,9 +1,18 @@
 using ApiDemoday.Data;
-using Microsoft.EntityFrameworkCore;
 using ApiDemoday.Profiles; 
 using AutoMapper;
+using CloudinaryDotNet;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var cloudinaryAccount = new Account(
+    builder.Configuration["CLOUDINARY_CLOUD_NAME"],
+    builder.Configuration["CLOUDINARY_API_KEY"],
+    builder.Configuration["CLOUDINARY_API_SECRET"]
+);
+var cloudinary = new Cloudinary(cloudinaryAccount);
+builder.Services.AddSingleton(cloudinary);
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -36,13 +45,15 @@ builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger(); // subi essas 2 linhas para abrir o swagger, caso nao queira acessar o swagger coloque dentro do if abaixo
     app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseCors(myAllowSpecificOrigins);
 
