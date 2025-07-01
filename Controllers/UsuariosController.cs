@@ -1,10 +1,11 @@
-﻿using ApiDemoday.DTOs.Usuario;
-using ApiDemoday.Data;
+﻿using ApiDemoday.Data;
+using ApiDemoday.DTOs.Usuario;
 using ApiDemoday.Models;
 using AutoMapper;
+using BCrypt.Net;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
 
 namespace ApiDemoday.Controllers
 {
@@ -83,6 +84,35 @@ namespace ApiDemoday.Controllers
             var usuarioDto = _mapper.Map<UsuarioExibicaoDto>(usuario);
             return Ok(usuarioDto);
         }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PatchUsuario(int id, [FromBody] JsonPatchDocument<UsuarioUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+            var usuarioFromDb = await _context.Usuarios.FindAsync(id);
+            if (usuarioFromDb == null)
+            {
+                return NotFound();
+            }
+
+            var usuarioToPatch = _mapper.Map<UsuarioUpdateDto>(usuarioFromDb);
+            patchDoc.ApplyTo(usuarioToPatch, ModelState);
+            if (!TryValidateModel(usuarioToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+            _mapper.Map(usuarioToPatch, usuarioFromDb);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
         [HttpDelete("{id}")] // pega dados por ID
         public async Task<IActionResult> DeleteUsuario(int id)
         {

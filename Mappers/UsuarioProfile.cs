@@ -10,6 +10,8 @@ namespace ApiDemoday.Profiles
         {
             CreateMap<UsuarioCadastroDto, Usuario>();
             CreateMap<Usuario, UsuarioExibicaoDto>();
+            CreateMap<Usuario, UsuarioUpdateDto>();
+            CreateMap<UsuarioUpdateDto, Usuario>();
         }
     }
 }
