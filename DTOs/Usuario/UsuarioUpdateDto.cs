@@ -4,7 +4,7 @@ namespace ApiDemoday.DTOs.Usuario;
 
 public class UsuarioUpdateDto
 {
-    [StringLength(100)]
+    [StringLength(100, ErrorMessage = "O nome deve ter no máximo 100 caracteres.")]
     public string? NomeUsuario { get; set; }
 
     public DateOnly? DataNascimentoUsuario { get; set; }
