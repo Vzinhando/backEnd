@@ -12,10 +12,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: myAllowSpecificOrigins,
                       policy =>
                       {
-                          // Aqui você coloca a URL do seu frontend no Railway
-                          // Para desenvolvimento, você também pode adicionar a URL local
-                          policy.WithOrigins("http://localhost:5173", // Exemplo para React local
-                                             "https://SEU-FRONTEND-URL.up.railway.app")
+                          policy.WithOrigins("http://localhost:5173") // conexcao com front
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                       });
