@@ -1,80 +1,106 @@
-﻿using BackEndDemoday.DTOs;
-using BackEndDemoday.DTOs.Usuario;
+﻿using ApiDemoday.DTOs.Usuario;
+using ApiDemoday.Data;
+using ApiDemoday.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
 
-[ApiController]
-[Route("api/[controller]")]
-public class UsuariosController : ControllerBase
+namespace ApiDemoday.Controllers
 {
-    private readonly IUsuarioService _usuarioService;
-
-    public UsuariosController(IUsuarioService usuarioService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UsuariosController : ControllerBase
     {
-        _usuarioService = usuarioService;
-    }
+        private readonly RailwayContext _context;
+        private readonly IMapper _mapper;
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetUsuario(int id) 
-    {
-        var usuario = await _usuarioService.ObterPorIdAsync(id);
-        if (usuario == null)
+        public UsuariosController(RailwayContext context, IMapper mapper)
         {
-            return NotFound();
-        }
-        return Ok(usuario);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateUsuario([FromBody] CriarUsuarioDto criarUsuarioDto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
+            _context = context;
+            _mapper = mapper;
         }
 
-        var novoUsuario = await _usuarioService.CriarAsync(criarUsuarioDto);
-        if (novoUsuario == null)
+        [HttpPost("cadastro")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UsuarioExibicaoDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CadastrarUsuario([FromBody] UsuarioCadastroDto usuarioCadastroDto)
         {
-            return BadRequest("O e-mail informado já está em uso.");
+            if (await _context.Usuarios.AnyAsync(u => u.EmailUsuario == usuarioCadastroDto.EmailUsuario))
+            {
+                return BadRequest("Este e-mail já está em uso.");
+            }
+
+            var usuario = _mapper.Map<Usuario>(usuarioCadastroDto);
+
+            usuario.TipoUsuario = "Comum";
+            usuario.DataCadastroUsuario = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            await _context.Usuarios.AddAsync(usuario);
+            await _context.SaveChangesAsync();
+
+            var usuarioExibicao = _mapper.Map<UsuarioExibicaoDto>(usuario);
+
+            return CreatedAtAction(nameof(GetUsuarioPorId), new { id = usuario.IdUsuario }, usuarioExibicao);
         }
 
-        return CreatedAtAction(nameof(GetUsuario), new { id = novoUsuario.IdUsuario }, novoUsuario);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetUsuarios()
-    {
-        var usuarios = await _usuarioService.ObterTodosAsync();
-        return Ok(usuarios);
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUsuario(int id, [FromBody] AtualizarUsuarioDto atualizarUsuarioDto)
-    {
-        if (!ModelState.IsValid)
+        [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Login([FromBody] UsuarioLoginDto usuarioLoginDto)
         {
-            return BadRequest(ModelState);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.EmailUsuario == usuarioLoginDto.EmailUsuario);
+
+            if (usuario == null || usuario.SenhaUsuario != usuarioLoginDto.SenhaUsuario)
+            {
+                return Unauthorized("E-mail ou senha inválidos.");
+            }
+
+            var token = GerarTokenJwt(usuario); 
+
+            return Ok(new { token });
         }
 
-        var resultado = await _usuarioService.AtualizarAsync(id, atualizarUsuarioDto);
-        if (!resultado)
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UsuarioExibicaoDto>>> GetUsuarios()
         {
-            return NotFound();
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var usuariosDto = _mapper.Map<List<UsuarioExibicaoDto>>(usuarios);
+            return Ok(usuariosDto);
         }
 
-        return NoContent();
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUsuario(int id)
-    {
-        var resultado = await _usuarioService.DeletarAsync(id);
-        if (!resultado)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UsuarioExibicaoDto>> GetUsuarioPorId(int id)
         {
-            return NotFound();
+            var usuario = await _context.Usuarios.FindAsync(id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            var usuarioDto = _mapper.Map<UsuarioExibicaoDto>(usuario);
+            return Ok(usuarioDto);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            _context.Usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        return NoContent();
+        private string GerarTokenJwt(Usuario usuario)
+        {
+            return $"TOKEN_SIMULADO_PARA_{usuario.EmailUsuario}_ID_{usuario.IdUsuario}_ROLE_{usuario.TipoUsuario}";
+        }
     }
 }
