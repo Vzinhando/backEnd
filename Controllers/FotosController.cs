@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ApiDemoday.Data;
 using Microsoft.EntityFrameworkCore;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace ApiDemoday.Controllers
 {
@@ -9,77 +11,42 @@ namespace ApiDemoday.Controllers
     public class FotosController : ControllerBase
     {
         private readonly RailwayContext _context;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly Cloudinary _cloudinary;
 
-        public FotosController(RailwayContext context, IWebHostEnvironment hostEnvironment)
+        public FotosController(RailwayContext context, Cloudinary cloudinary)
         {
             _context = context;
-            _hostEnvironment = hostEnvironment;
+            _cloudinary = cloudinary;
         }
 
         [HttpPost("{id}/foto")]
         public async Task<IActionResult> UploadFotoUsuario(int id, IFormFile foto)
         {
-            if (foto == null || foto.Length == 0)
-            {
-                return BadRequest("Nenhum arquivo de foto foi enviado.");
-            }
-
             var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            if (usuario == null) return NotFound("Usuário não encontrado.");
+
+            if (foto == null || foto.Length == 0) return BadRequest("Nenhum arquivo enviado.");
+
+            await using var stream = foto.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams()
             {
-                return NotFound("Usuário não encontrado.");
+                File = new FileDescription(foto.FileName, stream),
+                Transformation = new Transformation().Height(500).Width(500).Crop("fill")
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if (uploadResult.Error != null)
+            {
+                return BadRequest(uploadResult.Error.Message);
             }
 
-            if (!string.IsNullOrEmpty(usuario.FotoUsuario))
-            {
-                var caminhoFotoAntiga = Path.Combine(_hostEnvironment.WebRootPath, "imagens", usuario.FotoUsuario);
-                if (System.IO.File.Exists(caminhoFotoAntiga))
-                {
-                    System.IO.File.Delete(caminhoFotoAntiga);
-                }
-            }
-            var extensao = Path.GetExtension(foto.FileName);
-            var nomeArquivoUnico = $"{Guid.NewGuid()}{extensao}";
-
-            var caminhoParaSalvar = Path.Combine(_hostEnvironment.WebRootPath, "imagens", nomeArquivoUnico);
-
-            Directory.CreateDirectory(Path.GetDirectoryName(caminhoParaSalvar));
-
-            using (var stream = new FileStream(caminhoParaSalvar, FileMode.Create))
-            {
-                await foto.CopyToAsync(stream);
-            }
-            usuario.FotoUsuario = nomeArquivoUnico;
+            usuario.FotoUsuario = uploadResult.SecureUrl.AbsoluteUri;
             await _context.SaveChangesAsync();
 
-            return Ok(new { fotoPath = $"/imagens/{nomeArquivoUnico}" });
+            return Ok(new { fotoUrl = usuario.FotoUsuario });
         }
 
-        [HttpDelete("{id}/foto")]
-        public async Task<IActionResult> DeletarFotoUsuario(int id)
-        {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound("Usuário não encontrado.");
-            }
-
-            if (string.IsNullOrEmpty(usuario.FotoUsuario))
-            {
-                return BadRequest("O usuário não possui uma foto para deletar.");
-            }
-
-            var caminhoFoto = Path.Combine(_hostEnvironment.WebRootPath, "imagens", usuario.FotoUsuario);
-            if (System.IO.File.Exists(caminhoFoto))
-            {
-                System.IO.File.Delete(caminhoFoto);
-            }
-
-            usuario.FotoUsuario = null;
-            await _context.SaveChangesAsync();
-
-            return NoContent(); 
-        }
     }
 }
