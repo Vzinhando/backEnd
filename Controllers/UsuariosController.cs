@@ -57,9 +57,9 @@ namespace ApiDemoday.Controllers
                 return Unauthorized("E-mail ou senha inválidos.");
             }
 
-            var token = GerarTokenJwt(usuario); 
+            var token = GerarTokenJwt(usuario);
 
-            return Ok(new { token });
+            return Ok(new {token, usuario });
         }
 
 
