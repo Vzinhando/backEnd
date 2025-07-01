@@ -20,11 +20,11 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
+    app.UseSwagger(); // subi essas 2 linhas para abrir o swagger, caso nao queira acessar o swagger coloque dentro do if abaixo
+    app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
