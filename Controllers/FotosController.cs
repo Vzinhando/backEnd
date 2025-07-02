@@ -23,9 +23,9 @@ namespace ApiDemoday.Controllers
         public async Task<IActionResult> UploadFotoUsuario(int id, IFormFile foto)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null) return NotFound("Usuário não encontrado.");
+            if (usuario == null) return NotFound(new { message = "Nenhum usuário encontrado." });
 
-            if (foto == null || foto.Length == 0) return BadRequest("Nenhum arquivo enviado.");
+            if (foto == null || foto.Length == 0) return BadRequest(new { message = "Nenhum arquivo enviado." });
 
             await using var stream = foto.OpenReadStream();
 
@@ -57,12 +57,12 @@ namespace ApiDemoday.Controllers
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
-                return NotFound("Usuário não encontrado.");
+                return NotFound(new { message = "Usuário não encontrado." });
             }
 
             if (string.IsNullOrEmpty(usuario.FotoUsuario))
             {
-                return BadRequest("O usuário não possui uma foto para deletar.");
+                return BadRequest(new { message = "O usuário não possui uma foto para deletar." });
             }
 
             var uri = new Uri(usuario.FotoUsuario);

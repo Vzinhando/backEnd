@@ -54,7 +54,7 @@ namespace ApiDemoday.Controllers
 
             if (usuario == null || usuario.SenhaUsuario != usuarioLoginDto.SenhaUsuario)
             {
-                return Unauthorized("E-mail ou senha inválidos.");
+                return Unauthorized(new { message = "E-mail ou senha inválidos." });
             }
 
             var token = GerarTokenJwt(usuario);
